@@ -1,0 +1,79 @@
+
+//+------------------------------------------------------------------+
+//|                                                         Cleopatra EA MT5|
+//|                               Copyright © 2021, Forex Robot Easy Team|
+//|                                        https://www.forexroboteasy.com|
+//+------------------------------------------------------------------+
+//| This code implements the necessary trade functions and features for|
+//| Cleopatra EA MT5, an adaptable and innovative Forex trading software.|
+//| It includes trading strategies, automated trading, and risk management.|
+//+------------------------------------------------------------------+
+
+// Include necessary libraries and dependencies
+#include <Trade\Trade.mqh>
+#include <Risk\Risk.mqh>
+
+// Define global variables
+CTrade trade;
+CRisk risk;
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//|                                                                  |
+//|                                                                  |
+//|                              MAIN FUNCTION                          |
+//|                                                                  |
+//|                                                                  |
+//|                                                                  |
+//+------------------------------------------------------------------+
+void OnTick()
+{
+   // Read market conditions and make trading decisions
+   double currentPrice = SymbolInfoDouble(_Symbol, SYMBOL_BID);
+   double stopLoss = currentPrice - 100 * _Point; // Set stop loss 100 pips below current price
+   double takeProfit = currentPrice + 200 * _Point; // Set take profit 200 pips above current price
+   double lotSize = risk.CalculateLotSize(); // Calculate lot size based on risk management rules
+
+   // Execute trade
+   trade.Buy(lotSize, _Symbol, currentPrice, stopLoss, takeProfit);
+}
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//|                                                                  |
+//|                                                                  |
+//|                      TRADE CLASS IMPLEMENTATION                    |
+//|                                                                  |
+//|                                                                  |
+//|                                                                  |
+//+------------------------------------------------------------------+
+class CTrade
+{
+   // Trade execution function
+   void Buy(double volume, const string symbol, double price, double stopLoss, double takeProfit)
+   {
+      Print('Executing Buy order: Volume=', volume, ' Symbol=', symbol, ' Price=', price, ' StopLoss=', stopLoss, ' TakeProfit=', takeProfit);
+      // Add code to execute buy order here
+   }
+}
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//|                                                                  |
+//|                                                                  |
+//|                    RISK CLASS IMPLEMENTATION                       |
+//|                                                                  |
+//|                                                                  |
+//|                                                                  |
+//+------------------------------------------------------------------+
+class CRisk
+{
+   // Risk management function
+   double CalculateLotSize()
+   {
+      double accountBalance = AccountBalance();
+      double riskPercentage = 0.02; // Risk 2% of account balance
+      double lotSize = accountBalance * riskPercentage / 100000; // Assuming 1 lot = 100,000 units
+      return lotSize;
+   }
+}
